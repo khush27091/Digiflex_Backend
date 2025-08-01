@@ -1,0 +1,20 @@
+-- Table: public.measurements
+
+-- DROP TABLE IF EXISTS public.measurements;
+
+CREATE TABLE IF NOT EXISTS public.measurements
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    customer_name text COLLATE pg_catalog."default" NOT NULL,
+    customer_mobile text COLLATE pg_catalog."default" NOT NULL,
+    customer_address text COLLATE pg_catalog."default" NOT NULL,
+    measurement_date date NOT NULL,
+    user_id uuid,
+    created_at timestamp without time zone DEFAULT now(),
+    CONSTRAINT measurements_pkey PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.measurements
+    OWNER to postgres;

@@ -1,0 +1,21 @@
+-- Table: public.area_photos
+
+-- DROP TABLE IF EXISTS public.area_photos;
+
+CREATE TABLE IF NOT EXISTS public.area_photos
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    area_id uuid NOT NULL,
+    photo_url text COLLATE pg_catalog."default" NOT NULL,
+    uploaded_at timestamp without time zone DEFAULT now(),
+    CONSTRAINT area_photos_pkey PRIMARY KEY (id),
+    CONSTRAINT area_photos_area_id_fkey FOREIGN KEY (area_id)
+        REFERENCES public.measurement_areas (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.area_photos
+    OWNER to postgres;

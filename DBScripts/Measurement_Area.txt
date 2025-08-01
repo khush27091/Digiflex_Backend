@@ -1,0 +1,23 @@
+-- Table: public.measurement_areas
+
+-- DROP TABLE IF EXISTS public.measurement_areas;
+
+CREATE TABLE IF NOT EXISTS public.measurement_areas
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    measurement_id uuid NOT NULL,
+    area_name text COLLATE pg_catalog."default" NOT NULL,
+    height numeric(5,2) NOT NULL,
+    width numeric(5,2) NOT NULL,
+    notes text COLLATE pg_catalog."default",
+    CONSTRAINT measurement_areas_pkey PRIMARY KEY (id),
+    CONSTRAINT measurement_areas_measurement_id_fkey FOREIGN KEY (measurement_id)
+        REFERENCES public.measurements (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.measurement_areas
+    OWNER to postgres;
