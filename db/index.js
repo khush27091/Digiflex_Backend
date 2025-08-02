@@ -1,11 +1,22 @@
+// const { Pool } = require('pg');
+
+// const pool = new Pool({
+//   user: 'postgres',
+//   host: 'localhost',
+//   database: 'digiflex_db',
+//   password: 'postgres', // <-- match the one you just set
+//   port: 5432,
+// });
+
+// module.exports = pool;
+require('dotenv').config();
 const { Pool } = require('pg');
 
 const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'digiflex_db',
-  password: 'postgres', // <-- match the one you just set
-  port: 5432,
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
 module.exports = pool;
