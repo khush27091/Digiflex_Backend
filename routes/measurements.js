@@ -21,10 +21,12 @@ router.post('/', async (req, res) => {
     await client.query('BEGIN');
 
     const measurementId = uuidv4();
+const status = user_id ? 'assigned' : 'created';
+
 await client.query(
   `INSERT INTO measurements (id, customer_name, customer_mobile, customer_address, measurement_date, user_id, status)
    VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-  [measurementId, customer_name, customer_mobile, customer_address, measurement_date, user_id, 'created']
+  [measurementId, customer_name, customer_mobile, customer_address, measurement_date, user_id, status]
 );
 
     for (const area of areas) {
