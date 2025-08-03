@@ -24,7 +24,7 @@ router.post('/', async (req, res) => {
 await client.query(
   `INSERT INTO measurements (id, customer_name, customer_mobile, customer_address, measurement_date, user_id, status)
    VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-  [measurementId, customer_name, customer_mobile, customer_address, measurement_date, user_id, 'CREATED']
+  [measurementId, customer_name, customer_mobile, customer_address, measurement_date, user_id, 'created']
 );
 
     for (const area of areas) {
@@ -130,12 +130,12 @@ const {
   try {
     await client.query('BEGIN');
 
-let newStatus = 'CREATED';
+let newStatus = 'created';
 
 if (user_id && !areas?.length) {
-  newStatus = 'ASSIGNED';
+  newStatus = 'assigned';
 } else if (user_id && areas?.length) {
-  newStatus = 'IN PROGRESS';
+  newStatus = 'in_progress';
 }
 
 await client.query(
