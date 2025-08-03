@@ -193,4 +193,29 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+
+// ==========================
+// APPROVE Measurement (custom endpoint)
+// ==========================
+router.put('/:id/approve', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query(
+      `UPDATE measurements SET status = 'approved' WHERE id = $1 RETURNING *`,
+      [id]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Measurement not found' });
+    }
+
+    res.json({ message: 'Measurement approved successfully', data: result.rows[0] });
+  } catch (error) {
+    console.error('Approve error:', error);
+    res.status(500).json({ error: 'Failed to approve measurement' });
+  }
+});
+
+
 module.exports = router;
+
