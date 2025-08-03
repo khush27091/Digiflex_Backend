@@ -21,11 +21,11 @@ router.post('/', async (req, res) => {
     await client.query('BEGIN');
 
     const measurementId = uuidv4();
-    await client.query(
-      `INSERT INTO measurements (id, customer_name, customer_mobile, customer_address, measurement_date, user_id)
-       VALUES ($1, $2, $3, $4, $5, $6)`,
-      [measurementId, customer_name, customer_mobile, customer_address, measurement_date, user_id]
-    );
+await client.query(
+  `INSERT INTO measurements (id, customer_name, customer_mobile, customer_address, measurement_date, user_id, status)
+   VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+  [measurementId, customer_name, customer_mobile, customer_address, measurement_date, user_id, 'created']
+);
 
     for (const area of areas) {
       const areaId = uuidv4();
@@ -130,12 +130,20 @@ const {
   try {
     await client.query('BEGIN');
 
+let newStatus = 'created';
+
+if (user_id && !areas?.length) {
+  newStatus = 'assigned';
+} else if (user_id && areas?.length) {
+  newStatus = 'in_progress';
+}
+
 await client.query(
   `UPDATE measurements
    SET customer_name = $1, customer_mobile = $2, customer_address = $3,
-       measurement_date = $4, user_id = $5
-   WHERE id = $6`,
-  [customer_name, customer_mobile, customer_address, measurement_date, user_id, id]
+       measurement_date = $4, user_id = $5, status = $6
+   WHERE id = $7`,
+  [customer_name, customer_mobile, customer_address, measurement_date, user_id, newStatus, id]
 );
 
     await client.query(`DELETE FROM area_photos WHERE area_id IN (SELECT id FROM measurement_areas WHERE measurement_id = $1)`, [id]);
